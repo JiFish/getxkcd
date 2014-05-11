@@ -78,20 +78,27 @@ optional arguments:
     print('* Done evaluating collection.\n')
     print('* Retrieving all comics not already in your collection...\n')
     for i in range(total):
-        if str(i+1) == '404':
+        if (str(i+1) == '404') or (str(i+1) == '1350'):
             continue
         if (i+1) not in comicnumbers:
             print('* Fetching comic #' + str(i+1) + '...')
-            xkcd = urllib2.urlopen('http://xkcd.com/' + str(i+1) + '/')
-            img = re.search('<img src="http://imgs.xkcd.com/comics/.*?/>', xkcd.read(), re.DOTALL).group(0)
-            imgurl = re.search('http://imgs.xkcd.com/comics/.*?(\.jpg|\.png|\.gif)', img).group(0)
+            if (str(i+1) == '1190'): # Time
+                imgurl = 'http://img3.wikia.nocookie.net/__cb20130627164320/xkcd-time/images/a/a9/Time-animated.gif'
+                alt = 'Time'
+            if (str(i+1) == '1331'): # Time
+                imgurl = 'http://imgs.xkcd.com/comics/frequency.png'
+                alt = 'Frequency'
+            else:                    # Everything else
+                xkcd = urllib2.urlopen('http://xkcd.com/' + str(i+1) + '/')
+                img = re.search('<img src="http://imgs.xkcd.com/comics/.*?/>', xkcd.read(), re.DOTALL).group(0)
+                imgurl = re.search('http://imgs.xkcd.com/comics/.*?(\.jpg|\.png|\.gif)', img).group(0)
+                alt = re.search('alt=".+?"', img).group(0)[5:-1]
             if imgurl[-3:] == 'jpg':
                 ext = '.jpg'
             elif imgurl[-3:] == 'png':
                 ext = '.png'
             elif imgurl[-3:] == 'gif':
                 ext = '.gif'
-            alt = re.search('alt=".+?"', img).group(0)[5:-1]
             # To make sure our filename is writable, we strip HTML tags, and
             # strip any character not in the whitelist.
             valid_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 -_()!@#$%^&+=;'\",.~`"
