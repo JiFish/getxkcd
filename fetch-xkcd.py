@@ -63,7 +63,7 @@ optional arguments:
     total_fetched = 0
     # Create a list of all comics already downloaded.
     print('* Checking for gaps in your comic collection...')
-    filelist = os.listdir('.')
+    filelist = os.listdir('comics/')
     removethese = []
     for i in filelist:
         if i[-3:] not in ['jpg', 'png', 'gif']:
@@ -77,21 +77,22 @@ optional arguments:
     # working directory.
     print('* Done evaluating collection.\n')
     print('* Retrieving all comics not already in your collection...\n')
+    comic_exceptions = [404,1350,1416,1525,1608,1663]
     for i in range(total):
-        if (str(i+1) == '404') or (str(i+1) == '1350'):
+        if (i+1 in comic_exceptions):
             continue
         if (i+1) not in comicnumbers:
             print('* Fetching comic #' + str(i+1) + '...')
             if (str(i+1) == '1190'): # Time
-                imgurl = 'http://img3.wikia.nocookie.net/__cb20130627164320/xkcd-time/images/a/a9/Time-animated.gif'
+                imgurl = '//img3.wikia.nocookie.net/__cb20130627164320/xkcd-time/images/a/a9/Time-animated.gif'
                 alt = 'Time'
             if (str(i+1) == '1331'): # Time
-                imgurl = 'http://imgs.xkcd.com/comics/frequency.png'
+                imgurl = '//imgs.xkcd.com/comics/frequency.png'
                 alt = 'Frequency'
             else:                    # Everything else
                 xkcd = urllib2.urlopen('http://xkcd.com/' + str(i+1) + '/')
-                img = re.search('<img src="http://imgs.xkcd.com/comics/.*?/>', xkcd.read(), re.DOTALL).group(0)
-                imgurl = re.search('http://imgs.xkcd.com/comics/.*?(\.jpg|\.png|\.gif)', img).group(0)
+                img = re.search('<img src="//imgs.xkcd.com/comics/.*?/>', xkcd.read(), re.DOTALL).group(0)
+                imgurl = re.search('//imgs.xkcd.com/comics/.*?(\.jpg|\.png|\.gif)', img).group(0)
                 alt = re.search('alt=".+?"', img).group(0)[5:-1]
             if imgurl[-3:] == 'jpg':
                 ext = '.jpg'
@@ -104,8 +105,8 @@ optional arguments:
             valid_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 -_()!@#$%^&+=;'\",.~`"
             parser = HTMLParser()
             valid_filename = strip_tags(str(parser.unescape(''.join(c for c in alt if c in valid_chars))))
-            target_filename = str(i+1) + ' - ' + valid_filename + ext
-            urllib.urlretrieve(imgurl, target_filename)
+            target_filename = 'comics/'+str(i+1) + ' - ' + valid_filename + ext
+            urllib.urlretrieve('http:'+imgurl, target_filename)
             total_fetched += 1
             print("* Success! Comic saved as: \"" + target_filename + "\"")
     print('\n* Total files retrieved: ' + str(total_fetched) + '\n')
