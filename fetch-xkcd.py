@@ -28,14 +28,18 @@ Fetch-XKCD was written in Python 2.7.3 and may not work in Python 3.x.
 
 USAGE//
 
-Place fetch-xkcd.py into an empty directory and run it. To bring your collection up to date, run it again.
+Place fetch-xkcd.py into an empty directory and run it. Comics will be saved to the comics subdirectory. To bring your collection up to date, run it again.
 
 optional arguments:
-  -h, --help              show this help message and exit""")
+  -h, --help              Show this help message and exit
+  -n, --nag               Skip nag message""")
+    nagmsg = True
     for arg in argv:
         if 'h' in arg:
             usage()
             sys.exit()
+        if 'n' in arg:
+            nagmsg = False
     print('\n')
     print('  _____    _       _         __  ___  ______ ____  ')
     print(' |  ___|__| |_ ___| |__      \ \/ / |/ / ___|  _ \ ')
@@ -44,16 +48,17 @@ optional arguments:
     print(' |_|  \___|\__\___|_| |_|    /_/\_\_|\_\____|____/ ')
     print('                                                   ')
     print('\n* Fetch-XKCD v1.0\n\n')
-    print('* Check out the latest merch at store.xkcd.com - support your favorite comic!\n')
-    time.sleep(1)
-    print('* Check out the latest merch at store.xkcd.com - support your favorite comic!\n')
-    time.sleep(1)
-    print('* Check out the latest merch at store.xkcd.com - support your favorite comic!\n')
-    time.sleep(1)
-    print('* Check out the latest merch at store.xkcd.com - support your favorite comic!\n')
-    time.sleep(1)
-    print('* Check out the latest merch at store.xkcd.com - support your favorite comic!\n')
-    time.sleep(1)
+    if (nagmsg):
+        print('* Check out the latest merch at store.xkcd.com - support your favorite comic!\n')
+        time.sleep(1)
+        print('* Check out the latest merch at store.xkcd.com - support your favorite comic!\n')
+        time.sleep(1)
+        print('* Check out the latest merch at store.xkcd.com - support your favorite comic!\n')
+        time.sleep(1)
+        print('* Check out the latest merch at store.xkcd.com - support your favorite comic!\n')
+        time.sleep(1)
+        print('* Check out the latest merch at store.xkcd.com - support your favorite comic!\n')
+        time.sleep(1)
     print('* Checking xkcd.com for total comics in database...')
     xkcdhomestring = urllib2.urlopen('http://xkcd.com/').read()
     # Get number of comics available so we know how many to retrieve.
@@ -77,40 +82,35 @@ optional arguments:
     # working directory.
     print('* Done evaluating collection.\n')
     print('* Retrieving all comics not already in your collection...\n')
-    comic_exceptions = [404,1350,1416,1525,1608,1663]
+    comic_exceptions = [404,    # 404: Comic not found
+                        1350,   # Links to the wrong comic!
+                        1608,   # No static comic
+                        1663]   # No static comic
     for i in range(total):
         if (i+1 in comic_exceptions):
             continue
         if (i+1) not in comicnumbers:
             print('* Fetching comic #' + str(i+1) + '...')
-            if (str(i+1) == '1190'): # Time
-                imgurl = '//img3.wikia.nocookie.net/__cb20130627164320/xkcd-time/images/a/a9/Time-animated.gif'
-                alt = 'Time'
-            if (str(i+1) == '1331'): # Time
-                imgurl = '//imgs.xkcd.com/comics/frequency.png'
-                alt = 'Frequency'
-            else:                    # Everything else
-                xkcd = urllib2.urlopen('http://xkcd.com/' + str(i+1) + '/')
-                img = re.search('<img src="//imgs.xkcd.com/comics/.*?/>', xkcd.read(), re.DOTALL).group(0)
-                imgurl = re.search('//imgs.xkcd.com/comics/.*?(\.jpg|\.png|\.gif)', img).group(0)
-                alt = re.search('alt=".+?"', img).group(0)[5:-1]
-            if imgurl[-3:] == 'jpg':
-                ext = '.jpg'
-            elif imgurl[-3:] == 'png':
-                ext = '.png'
-            elif imgurl[-3:] == 'gif':
-                ext = '.gif'
+            xkcd = urllib2.urlopen('http://xkcd.com/' + str(i+1) + '/')
+            xkcdtext = xkcd.read()
+            imgre = re.search('Image URL \(for hotlinking/embedding\): (http://imgs\.xkcd\.com/comics/(.*)(\.jpg|\.png|\.gif))\n',xkcdtext)
+            if (imgre == None):
+                print "Comic not found!"
+                continue
+            imgurl = imgre.group(1)
+            ext = imgre.group(3)
+            alt = re.search('<div id="ctitle">(.*)</div>',xkcdtext).group(1)
             # To make sure our filename is writable, we strip HTML tags, and
             # strip any character not in the whitelist.
             valid_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 -_()!@#$%^&+=;'\",.~`"
             parser = HTMLParser()
             valid_filename = strip_tags(str(parser.unescape(''.join(c for c in alt if c in valid_chars))))
             target_filename = 'comics/'+str(i+1) + ' - ' + valid_filename + ext
-            urllib.urlretrieve('http:'+imgurl, target_filename)
+            urllib.urlretrieve(imgurl, target_filename)
             total_fetched += 1
             print("* Success! Comic saved as: \"" + target_filename + "\"")
     print('\n* Total files retrieved: ' + str(total_fetched) + '\n')
     print("* Fetch-XKCD finished! Enjoy your comics!")
-    time.sleep(10)
+    time.sleep(5)
 if __name__ == '__main__':
     main(sys.argv[1:])
