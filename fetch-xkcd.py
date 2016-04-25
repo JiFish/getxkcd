@@ -83,7 +83,9 @@ optional arguments:
     print('* Done evaluating collection.\n')
     print('* Retrieving all comics not already in your collection...\n')
     comic_exceptions = [404,    # 404: Comic not found
+                        1193,   # Comic not an image
                         1350,   # Links to the wrong comic!
+                        1446,   # Hotlink broken
                         1608,   # No static comic
                         1663]   # No static comic
     for i in range(total):
