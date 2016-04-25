@@ -88,12 +88,12 @@ optional arguments:
                         1446,   # Hotlink broken
                         1608,   # No static comic
                         1663]   # No static comic
-    for i in range(total):
-        if (i+1 in comic_exceptions):
+    for i in range(1, total+1):
+        if (i in comic_exceptions):
             continue
-        if (i+1) not in comicnumbers:
-            print('* Fetching comic #' + str(i+1) + '...')
-            xkcd = urllib2.urlopen('http://xkcd.com/' + str(i+1) + '/')
+        if (i) not in comicnumbers:
+            print('* Fetching comic #' + str(i) + '...')
+            xkcd = urllib2.urlopen('http://xkcd.com/' + str(i) + '/')
             xkcdtext = xkcd.read()
             imgre = re.search('Image URL \(for hotlinking/embedding\): (http://imgs\.xkcd\.com/comics/(.*)(\.jpg|\.png|\.gif))\n',xkcdtext)
             if (imgre == None):
@@ -107,7 +107,7 @@ optional arguments:
             valid_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 -_()!@#$%^&+=;'\",.~`"
             parser = HTMLParser()
             valid_filename = strip_tags(str(parser.unescape(''.join(c for c in alt if c in valid_chars))))
-            target_filename = 'comics/'+str(i+1) + ' - ' + valid_filename + ext
+            target_filename = 'comics/'+str(i) + ' - ' + valid_filename + ext
             urllib.urlretrieve(imgurl, target_filename)
             total_fetched += 1
             print("* Success! Comic saved as: \"" + target_filename + "\"")
