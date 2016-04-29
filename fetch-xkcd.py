@@ -66,6 +66,9 @@ optional arguments:
     total = int(re.search('\d+', totalzoom1).group(0)) + 1
     print('* ' + str(total) + ' comics found in database.\n')
     total_fetched = 0
+    # Create comics folder if needed
+    if os.path.isdir('comics') == False:
+        os.mkdir('comics')
     # Create a list of all comics already downloaded.
     print('* Checking for gaps in your comic collection...')
     filelist = os.listdir('comics/')
