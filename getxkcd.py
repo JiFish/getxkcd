@@ -20,15 +20,15 @@ def main(argv):
     def usage():
         print("""ABOUT//
 
-Fetch-XKCD v1.0!
+getxkcd v1.0!
 
-Fetch-XKCD is a tool for downloading and updating a collection of comics from popular webcomic xkcd.com. Simply put it in an empty directory and run it to fill that directory with every comic. Then whenever you want to update your collection, simply run it again.
+getxkcd is a tool for downloading and updating a collection of comics from popular webcomic xkcd.com. Simply put it in an empty directory and run it to fill that directory with every comic. Then whenever you want to update your collection, simply run it again.
 
-Fetch-XKCD was written in Python 2.7.3 and may not work in Python 3.x.
+getxkcd was written in Python 2.7.3 and may not work in Python 3.x.
 
 USAGE//
 
-Place fetch-xkcd.py into an empty directory and run it. Comics will be saved to the comics subdirectory. To bring your collection up to date, run it again.
+Place getxkcd.py into an empty directory and run it. Comics will be saved to the comics subdirectory. To bring your collection up to date, run it again.
 
 optional arguments:
   -h, --help              Show this help message and exit
@@ -41,24 +41,17 @@ optional arguments:
         if 'n' in arg:
             nagmsg = False
     print('\n')
-    print('  _____    _       _         __  ___  ______ ____  ')
-    print(' |  ___|__| |_ ___| |__      \ \/ / |/ / ___|  _ \ ')
-    print(" | |_ / _ \ __/ __| '_ \ _____\  /| ' / |   | | | |")
-    print(' |  _|  __/ || (__| | | |_____/  \| . \ |___| |_| |')
-    print(' |_|  \___|\__\___|_| |_|    /_/\_\_|\_\____|____/ ')
-    print('                                                   ')
-    print('\n* Fetch-XKCD v1.0\n\n')
+    print('            _        _           _  ')
+    print('  __ _  ___| |___  _| | _____ __| | ')
+    print(' / _` |/ _ \ __\ \/ / |/ / __/ _` | ')
+    print('| (_| |  __/ |_ >  <|   < (_| (_| | ')
+    print(' \__, |\___|\__/_/\_\_|\_\___\__,_| ')
+    print(' |___/                              ')
+    print('\n* getxkcd v1.0\n\n')
     if (nagmsg):
-        print('* Check out the latest merch at store.xkcd.com - support your favorite comic!\n')
-        time.sleep(1)
-        print('* Check out the latest merch at store.xkcd.com - support your favorite comic!\n')
-        time.sleep(1)
-        print('* Check out the latest merch at store.xkcd.com - support your favorite comic!\n')
-        time.sleep(1)
-        print('* Check out the latest merch at store.xkcd.com - support your favorite comic!\n')
-        time.sleep(1)
-        print('* Check out the latest merch at store.xkcd.com - support your favorite comic!\n')
-        time.sleep(1)
+        for _ in range(5):
+            print('* Check out the latest merch at store.xkcd.com - support your favorite comic!\n')
+            time.sleep(1)
     print('* Checking xkcd.com for total comics in database...')
     xkcdhomestring = urllib2.urlopen('http://xkcd.com/').read()
     # Get number of comics available so we know how many to retrieve.
@@ -115,7 +108,7 @@ optional arguments:
             total_fetched += 1
             print("* Success! Comic saved as: \"" + target_filename + "\"")
     print('\n* Total files retrieved: ' + str(total_fetched) + '\n')
-    print("* Fetch-XKCD finished! Enjoy your comics!")
+    print("* getxkcd finished! Enjoy your comics!")
     time.sleep(5)
 if __name__ == '__main__':
     main(sys.argv[1:])
