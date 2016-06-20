@@ -2,7 +2,7 @@ ABOUT//
 
 getxkcd v1.0!
 
-getxkcd is a tool for downloading and updating a collection of comics from popular webcomic xkcd.com. Simply put it in an empty directory and run it to fill that directory with every comic. Then whenever you want to update your collection, simply run it again.
+getxkcd is a tool for downloading and updating a collection of comics from popular webcomic xkcd.com. Simply put it in an empty directory and run it to fill that directory with every comic. Then whenever you want to update your collection, simply run it again. It is a fork of Fetch-XKCD by WinButler.
 
 getxkcd was written in Python 2.7.3 and may not work in Python 3.x.
 
